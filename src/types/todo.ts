@@ -11,4 +11,5 @@ export interface Todo {
   createdAt: string;
   updatedAt: string;
   priority: Priority;
+  projectId?: string;  // Optional project id
 }
