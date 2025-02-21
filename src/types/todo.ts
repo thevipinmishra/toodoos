@@ -1,7 +1,14 @@
+export enum Priority {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high'
+}
+
 export interface Todo {
   id: string;
   title: string;
   completed: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
+  priority: Priority;
 }

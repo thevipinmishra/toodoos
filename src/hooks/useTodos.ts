@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
 import { useStore } from '../store'
+import { Priority } from '../types/todo'
 
 export const useAddTodo = () => {
-  return useCallback((title: string) => {
-    useStore.getState().addTodo(title)
+  return useCallback((title: string, priority: Priority = Priority.MEDIUM) => {
+    useStore.getState().addTodo(title, priority)
   }, [])
 }
 
@@ -20,8 +21,8 @@ export const useDeleteTodo = () => {
 }
 
 export const useUpdateTodo = () => {
-  return useCallback((id: string, title: string) => {
-    useStore.getState().updateTodo(id, title)
+  return useCallback((id: string, title: string, priority: Priority) => {
+    useStore.getState().updateTodo(id, title, priority)
   }, [])
 }
 
