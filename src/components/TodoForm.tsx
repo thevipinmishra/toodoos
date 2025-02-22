@@ -60,7 +60,7 @@ export function TodoForm({ onSubmit }: TodoFormProps) {
           <SelectValue />
           <ChevronDownIcon className="size-4 shrink-0" aria-hidden />
         </Button>
-        <Popover className="w-[120px]">
+        <Popover className="w-[120px] data-entering:motion-opacity-in-0  motion-duration-200 data-entering:data-[placement=bottom]:motion-translate-y-in-[0.5rem] data-exiting:motion-opacity-out-0">
           <ListBox className="rounded-lg border border-gray-200 bg-white p-1 shadow-lg">
             {Object.entries(priorityLabels).map(([key, label]) => (
               <ListBoxItem

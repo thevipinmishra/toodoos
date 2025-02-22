@@ -5,6 +5,7 @@ import {
   useToggleTodo,
   useDeleteTodo,
   useTodos,
+  useUpdateTodo,
 } from "./hooks/useTodos";
 
 import {
@@ -28,6 +29,7 @@ function App() {
   const addTodo = useAddTodo();
   const toggleTodo = useToggleTodo();
   const deleteTodo = useDeleteTodo();
+  const updateTodo = useUpdateTodo();
   const [selectedDate, setSelectedDate] = useState(today(getLocalTimeZone()));
   const { selectedProject } = useSelectedProject();
 
@@ -64,6 +66,11 @@ function App() {
     toast.success("Todo deleted successfully");
   };
 
+  const handleEditTodo = (id: string, title: string, priority: Priority) => {
+    updateTodo(id, title, priority);
+    toast.success("Todo updated successfully");
+  };
+
   return (
     <div className="min-h-dvh [--aside-width:280px]">
       <Sidebar
@@ -73,10 +80,10 @@ function App() {
       />
       <main className="lg:pl-[var(--aside-width)]">
         <Header />
-        <div className="container max-w-3xl py-12">
+        <div className="container lg:max-w-3xl py-12">
           <div className="flex flex-col gap-8">
             <h3 className="font-bold tracking-tight text-gray-900 text-2xl">
-              Toodoos 📝
+              Toodoos {filteredTodos.length > 0 ? `(${filteredTodos.length})` : ''} 📝
             </h3>
             <TodoForm
               onSubmit={handleSubmit}
@@ -91,6 +98,7 @@ function App() {
               selectedDate={selectedDate}
               onToggle={toggleTodo}
               onDelete={handleDeleteTodo}
+              onEdit={handleEditTodo}
             />
           </div>
         </div>
