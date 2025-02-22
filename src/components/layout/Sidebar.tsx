@@ -145,7 +145,7 @@ export const Sidebar = ({
             }`}
           >
             <InboxIcon size={16} />
-            <span>Toodoos</span>
+            <span>Hodgepodge</span>
           </div>
           {projects.map((project) => (
             <div
