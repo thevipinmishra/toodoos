@@ -4,7 +4,15 @@ import {
   getLocalTimeZone,
   today,
 } from "@internationalized/date";
-import { ChevronLeft, ChevronRight, Edit2, InboxIcon, Plus, Trash2, X } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Edit2,
+  InboxIcon,
+  Plus,
+  Trash2,
+  X,
+} from "lucide-react";
 import {
   Button,
   Calendar,

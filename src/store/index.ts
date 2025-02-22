@@ -39,7 +39,7 @@ export const useStore = create<Store>()(
           projects: [
             ...state.projects,
             {
-              id: nanoid(),
+              id: nanoid(7),
               title,
               createdAt: getCurrentDateTime(),
               updatedAt: getCurrentDateTime(),
@@ -58,7 +58,8 @@ export const useStore = create<Store>()(
         set((state) => ({
           projects: state.projects.filter((project) => project.id !== id),
           todos: state.todos.filter((todo) => todo.projectId !== id),
-          selectedProject: state.selectedProject === id ? null : state.selectedProject
+          selectedProject:
+            state.selectedProject === id ? null : state.selectedProject,
         })),
       addTodo: (title, priority = Priority.MEDIUM, projectId) =>
         set((state) => ({

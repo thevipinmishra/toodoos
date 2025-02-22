@@ -1,4 +1,11 @@
-import { Button, Checkbox, Dialog, DialogTrigger, Modal, ModalOverlay } from "react-aria-components";
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogTrigger,
+  Modal,
+  ModalOverlay,
+} from "react-aria-components";
 import { Todo, Priority } from "../types/todo";
 import { Check, Trash2, Pencil } from "lucide-react";
 import cx from "classix";
@@ -16,15 +23,21 @@ import { TodoEditForm } from "./TodoEditForm";
 const priorityColors = {
   [Priority.LOW]: {
     badge: "bg-gray-100 text-gray-700",
-    border: "border-l-gray-300",
+    accent: "text-gray-500",
+    hover: "hover:bg-gray-50",
+    border: "border-gray-200",
   },
   [Priority.MEDIUM]: {
     badge: "bg-blue-100 text-blue-700",
-    border: "border-l-blue-400",
+    accent: "text-blue-600",
+    hover: "hover:bg-blue-50",
+    border: "border-blue-200",
   },
   [Priority.HIGH]: {
     badge: "bg-red-100 text-red-700",
-    border: "border-l-red-400",
+    accent: "text-red-600",
+    hover: "hover:bg-red-50",
+    border: "border-red-200",
   },
 };
 
@@ -48,73 +61,98 @@ function TodoItem({
   return (
     <li
       className={cx(
-        "p-3 rounded-r-lg hover:bg-gray-50 transition-colors border-l-4",
-        priorityColors[todo.priority].border
+        "p-4 rounded-lg transition-all duration-200",
+        "bg-white border shadow-2xs",
+        todo.completed
+          ? "bg-gray-50 border-gray-200"
+          : `${priorityColors[todo.priority].hover} ${
+              priorityColors[todo.priority].border
+            }`
       )}
     >
-      <div className="grid items-center grid-cols-[auto_1fr_auto_auto_auto] gap-x-3">
+      <div className="grid items-center grid-cols-[auto_1fr_auto] gap-x-4">
         <Checkbox
           aria-label={`toggle ${todo.title}`}
           isSelected={todo.completed}
           onChange={() => onToggle(todo.id)}
           className="group inline-flex items-center"
         >
-          <div className="size-5 rounded-md flex justify-center items-center border border-gray-300 group-data-[selected]:bg-gray-900 group-data-[selected]:border-gray-900 group-data-[selected]:text-white transition-colors">
-            <Check className="size-4 hidden group-data-[selected]:block" />
+          <div
+            className={cx(
+              "size-5 rounded-full flex justify-center items-center border-2",
+              todo.completed
+                ? "bg-gray-200 border-gray-200"
+                : `border-gray-300 group-hover:border-${
+                    priorityColors[todo.priority].accent
+                  }`,
+              "transition-all duration-200"
+            )}
+          >
+            <Check
+              className={cx(
+                "size-3.5",
+                todo.completed
+                  ? "text-white"
+                  : "hidden group-data-[selected]:block"
+              )}
+            />
           </div>
         </Checkbox>
 
-        <p
-          className={cx(
-            "text-gray-600 font-semibold text-lg",
-            todo.completed ? "line-through text-gray-400" : ""
-          )}
-        >
-          {todo.title}
-        </p>
+        <div className="flex flex-col gap-1">
+          <p
+            className={cx(
+              "font-medium text-base transition-all duration-200",
+              todo.completed
+                ? "text-gray-400"
+                : "text-gray-700 hover:text-gray-900"
+            )}
+          >
+            {todo.title}
+          </p>
+          <p className="text-xs text-gray-400">
+            {dateTimeFormatter.format(
+              parseZonedDateTime(todo.createdAt).toDate()
+            )}
+          </p>
+        </div>
 
-        <DialogTrigger isOpen={isEditing} onOpenChange={setIsEditing}>
+        <div className="flex items-center gap-2 transition-all duration-200">
+          <DialogTrigger isOpen={isEditing} onOpenChange={setIsEditing}>
+            <Button className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200">
+              <Pencil size={14} />
+            </Button>
+            <ModalOverlay
+              isDismissable
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm p-8 flex items-center justify-center overflow-y-auto data-[entering]:motion-preset-fade data-[entering]:motion-duration-100"
+            >
+              <Modal className="w-full max-w-md bg-white rounded-lg shadow-lg data-[entering]:motion-preset-blur-up data-[entering]:motion-duration-150">
+                <Dialog className="outline-0">
+                  {({ close }) => (
+                    <div className="p-6">
+                      <TodoEditForm
+                        initialTitle={todo.title}
+                        initialPriority={todo.priority}
+                        onSubmit={(title, priority) => {
+                          onEdit(todo.id, title, priority);
+                          close();
+                        }}
+                        onCancel={close}
+                      />
+                    </div>
+                  )}
+                </Dialog>
+              </Modal>
+            </ModalOverlay>
+          </DialogTrigger>
+
           <Button
-            className="p-1 text-gray-400 hover:text-gray-900 rounded focus:outline-none focus:ring-1 focus:ring-gray-200"
+            onPress={() => onDelete(todo.id)}
+            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-200"
           >
-            <Pencil size={16} />
+            <Trash2 size={14} />
           </Button>
-          <ModalOverlay
-            isDismissable
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm p-8 flex items-center justify-center overflow-y-auto data-[entering]:motion-preset-fade data-[entering]:motion-duration-100"
-          >
-            <Modal className="w-full max-w-md bg-white rounded-lg shadow-lg data-[entering]:motion-preset-blur-up data-[entering]:motion-duration-150">
-              <Dialog className="outline-0">
-                {({ close }) => (
-                  <div className="p-6">
-                    <TodoEditForm
-                      initialTitle={todo.title}
-                      initialPriority={todo.priority}
-                      onSubmit={(title, priority) => {
-                        onEdit(todo.id, title, priority);
-                        close();
-                      }}
-                      onCancel={close}
-                    />
-                  </div>
-                )}
-              </Dialog>
-            </Modal>
-          </ModalOverlay>
-        </DialogTrigger>
-
-        <Button
-          onPress={() => onDelete(todo.id)}
-          className="p-1 text-gray-400 hover:text-gray-900 rounded focus:outline-none focus:ring-1 focus:ring-gray-200"
-        >
-          <Trash2 size={16} />
-        </Button>
-
-        <p className="text-xs col-start-2 text-gray-400 mt-0.5">
-          {dateTimeFormatter.format(
-            parseZonedDateTime(todo.createdAt).toDate()
-          )}
-        </p>
+        </div>
       </div>
     </li>
   );
@@ -158,22 +196,27 @@ export function TodoList({
 
   if (todos.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-gray-500 text-sm">
-          No tasks for{" "}
-          {isSelectedToday
-            ? "today"
-            : formatDate(selectedDate.toDate(getLocalTimeZone()))}
-        </p>
-        <p className="text-gray-400 text-sm mt-1">
-          Add a task to get started ✨
-        </p>
+      <div className="text-center py-16 px-4">
+        <div className="max-w-sm mx-auto">
+          <div className="mb-4 text-gray-300">
+            <Check size={48} className="mx-auto" />
+          </div>
+          <p className="text-gray-600 text-lg font-medium">
+            No tasks for{" "}
+            {isSelectedToday
+              ? "today"
+              : formatDate(selectedDate.toDate(getLocalTimeZone()))}
+          </p>
+          <p className="text-gray-400 mt-2">
+            Add a task using the input field above ✨
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <ul className=" divide-y divide-gray-100">
+    <ul className="space-y-3 px-1">
       {todos.map((todo) => (
         <TodoItem
           key={todo.id}

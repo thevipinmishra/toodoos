@@ -9,8 +9,8 @@ export const useUserName = () => {
 export const useSelectedProject = () => {
   const selectedProject = useStore((state) => state.selectedProject);
   const setSelectedProject = useStore((state) => state.setSelectedProject);
-  return { 
-    selectedProject, 
-    setSelectedProject 
+  return {
+    selectedProject,
+    setSelectedProject,
   } as const;
 };
