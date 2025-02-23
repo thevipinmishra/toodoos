@@ -5,6 +5,18 @@
   @apply mx-auto px-4;
 }
 
+@custom-variant entering {
+  &:where([data-entering]) {
+    @slot;
+  }
+}
+
+@custom-variant exiting {
+  &:where([data-exiting]) {
+    @slot;
+  }
+}
+
 @theme {
   --font-sans: "DM Sans Variable", sans-serif;
 }

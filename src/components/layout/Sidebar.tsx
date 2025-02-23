@@ -28,7 +28,6 @@ import {
 } from "react-aria-components";
 import { useProjects, useProjectActions } from "../../hooks/useProjects";
 import { useState } from "react";
-import { toast } from "sonner";
 import WeekCalendarGrid from "../WeekCalendarGrid";
 import { useSelectedProject } from "../../hooks/useMetaState";
 import { Project } from "../../types/project";
@@ -55,10 +54,8 @@ export const Sidebar = ({
     e.preventDefault();
     if (editingProject) {
       updateProject(editingProject.id, { name: newProjectName });
-      toast.success("Project updated successfully");
     } else {
       addProject({ name: newProjectName });
-      toast.success("Project created successfully");
     }
     setNewProjectName("");
     setEditingProject(null);
@@ -82,7 +79,6 @@ export const Sidebar = ({
       if (selectedProject === projectToDelete.id) {
         setSelectedProject(null);
       }
-      toast.success("Project deleted successfully");
       setDeleteConfirmationOpen(false);
       setProjectToDelete(null);
     }
@@ -106,7 +102,7 @@ export const Sidebar = ({
           >
             <ChevronLeft size={16} />
           </Button>
-          <Heading className="text-sm font-medium text-gray-600" />
+          <Heading className="text-xs font-medium text-gray-600" />
           <Button
             slot="next"
             className="size-8 flex justify-center items-center rounded-md text-gray-400 hover:text-gray-900 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-1 focus:ring-gray-200 disabled:opacity-50 disabled:pointer-events-none"
@@ -185,9 +181,9 @@ export const Sidebar = ({
         isDismissable
         isOpen={projectDialogOpen}
         onOpenChange={setProjectDialogOpen}
-        className="fixed inset-0 bg-black/20 backdrop-blur-sm p-8 flex items-center justify-center overflow-y-auto"
+        className="fixed inset-0 bg-black/20 backdrop-blur-sm p-8 flex items-center justify-center overflow-y-auto entering:motion-preset-fade"
       >
-        <Modal className="w-[400px] bg-white rounded-lg shadow-lg">
+        <Modal className="w-[400px] bg-white rounded-lg shadow-lg entering:motion-duration-200">
           <Dialog className="outline-0">
             <div className="p-6 space-y-6">
               <div className="flex items-center justify-between gap-6">

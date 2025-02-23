@@ -1,13 +1,9 @@
 import { Settings } from "lucide-react";
 import { Button, DialogTrigger } from "react-aria-components";
 import { getGreeting } from "../../utils/greeting";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useUserName } from "../../hooks/useMetaState";
-import {
-  fromDate,
-  getLocalTimeZone,
-  DateFormatter,
-} from "@internationalized/date";
+import { fromDate, getLocalTimeZone, DateFormatter } from "@internationalized/date";
 import { SettingsDialog } from "./SettingsDialog";
 
 const dateTimeFormatter = new DateFormatter("en-IN", {
@@ -20,9 +16,7 @@ const dateTimeFormatter = new DateFormatter("en-IN", {
   hour12: true,
 });
 
-export const Header = () => {
-  const { name } = useUserName();
-  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
+const TimeDisplay = () => {
   const [currentDateTime, setCurrentDateTime] = useState(() =>
     fromDate(new Date(), getLocalTimeZone())
   );
@@ -40,6 +34,17 @@ export const Header = () => {
     [currentDateTime]
   );
 
+  return (
+    <p className="text-gray-500 font-medium text-xs tabular-nums">
+      {formattedDateTime}
+    </p>
+  );
+};
+
+export const Header = () => {
+  const { name } = useUserName();
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
+
   const greeting = useMemo(() => {
     const baseGreeting = getGreeting();
     return name ? `${baseGreeting}, ${name}` : baseGreeting;
@@ -50,9 +55,7 @@ export const Header = () => {
       <div className="container flex items-center justify-between">
         <div className="space-y-1">
           <p className="text-gray-600 text-sm font-medium">{greeting}</p>
-          <p className="text-gray-500 font-medium text-xs tabular-nums">
-            {formattedDateTime}
-          </p>
+          <TimeDisplay />
         </div>
 
         <DialogTrigger

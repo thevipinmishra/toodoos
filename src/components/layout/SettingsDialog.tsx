@@ -12,7 +12,6 @@ import {
 } from "react-aria-components";
 import { useState, useCallback } from "react";
 import { useUserName } from "../../hooks/useMetaState";
-import { toast } from "sonner";
 
 interface SettingsDialogProps {
   onClose: () => void;
@@ -26,15 +25,14 @@ export const SettingsDialog = ({ onClose }: SettingsDialogProps) => {
     e.preventDefault();
     setName(inputName);
     onClose();
-    toast.success("Name updated successfully");
   }, [inputName, setName, onClose]);
 
   return (
     <ModalOverlay
       isDismissable
-      className="fixed inset-0 bg-black/20 backdrop-blur-sm p-8 flex items-center justify-center overflow-y-auto"
+      className="fixed inset-0 bg-black/20 backdrop-blur-sm p-8 flex items-center justify-center overflow-y-auto entering:motion-preset-fade"
     >
-      <Modal className="w-full max-w-md bg-white rounded-lg shadow-lg">
+      <Modal className="w-full max-w-md bg-white rounded-lg shadow-lg entering:motion-preset-slide-up-sm entering:motion-duration-200">
         <Dialog className="outline-0">
           {({ close }) => (
             <div className="p-6 space-y-6">

@@ -20,7 +20,6 @@ import {
 import { Priority } from "./types/todo";
 import { useState } from "react";
 import { useSelectedProject } from "./hooks/useMetaState";
-import { toast } from "sonner";
 import { Header } from "./components/layout/Header";
 import { Sidebar } from "./components/layout/Sidebar";
 
@@ -43,7 +42,6 @@ function App() {
 
   const handleSubmit = (title: string, priority: Priority) => {
     addTodo(title, priority, selectedProject || undefined);
-    toast.success("Todo added successfully");
   };
 
   const isSameDay = (date1: DateValue, date2: DateValue) => {
@@ -63,12 +61,10 @@ function App() {
 
   const handleDeleteTodo = (id: string) => {
     deleteTodo(id);
-    toast.success("Todo deleted successfully");
   };
 
   const handleEditTodo = (id: string, title: string, priority: Priority) => {
     updateTodo(id, title, priority);
-    toast.success("Todo updated successfully");
   };
 
   return (
