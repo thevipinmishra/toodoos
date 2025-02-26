@@ -58,6 +58,18 @@ export class AudioService {
       this.initialized = false;
     }
   }
+
+  public async stopNotification(): Promise<void> {
+    try {
+      if (this.audio) {
+        await this.audio.pause();
+        this.audio.currentTime = 0;
+      }
+    } catch (error) {
+      console.error('Failed to stop notification sound:', error);
+      throw error;
+    }
+  }
 }
 
 export const audioService = AudioService.getInstance();

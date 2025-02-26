@@ -61,7 +61,7 @@ export const Header = memo(() => {
   }, []);
 
   return (
-    <header className="bg-white py-4 border-b border-gray-200">
+    <header className="bg-white/60 backdrop-blur-sm sticky top-0 py-4 border-b border-gray-200">
       <div className="container flex items-center justify-between">
         <div className="space-y-1">
           <p className="text-gray-600 text-sm font-medium">{greeting}</p>

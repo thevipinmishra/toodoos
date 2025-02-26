@@ -203,6 +203,10 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const completeReminder = useCallback((id: string) => {
     toggleReminder(id);
     dismissNotification(id);
+    // Stop audio playback when a notification is marked as done
+    audioService.stopNotification().catch(error => 
+      console.error("Failed to stop notification sound:", error)
+    );
   }, [toggleReminder, dismissNotification]);
 
   // Value object memoized to prevent unnecessary re-renders
