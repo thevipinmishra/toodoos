@@ -19,6 +19,7 @@ import {
 } from "@internationalized/date";
 import { useState } from "react";
 import { TodoEditForm } from "./TodoEditForm";
+import { dateTimeFormatter, formatDate } from "../utils/dateUtils";
 
 const priorityColors = {
   [Priority.LOW]: {
@@ -173,24 +174,7 @@ export function TodoList({
   onEdit,
   selectedDate,
 }: TodoListProps) {
-  const dateTimeFormatter = new DateFormatter("en-IN", {
-    day: "numeric",
-    month: "short",
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  });
-
-  const dateFormatter = new DateFormatter("en-IN", {
-    day: "numeric",
-    month: "short",
-  });
-
-  const formatDate = (date: Date, includeTime: boolean = false) => {
-    return includeTime
-      ? dateTimeFormatter.format(date)
-      : dateFormatter.format(date);
-  };
+  
 
   const isSelectedToday = isSameDay(selectedDate, today(getLocalTimeZone()));
 

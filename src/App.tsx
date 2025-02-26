@@ -22,6 +22,9 @@ import { useState } from "react";
 import { useSelectedProject } from "./hooks/useMetaState";
 import { Header } from "./components/layout/Header";
 import { Sidebar } from "./components/layout/Sidebar";
+import { NotificationProvider } from './context/NotificationContext';
+import { NotificationContainer } from './components/notifications/NotificationContainer';
+import { NotificationPermissionButton } from './components/notifications/NotificationPermissionButton';
 
 function App() {
   const todos = useTodos();
@@ -68,38 +71,42 @@ function App() {
   };
 
   return (
-    <div className="min-h-dvh [--aside-width:280px]">
-      <Sidebar
-        selectedDate={selectedDate}
-        setSelectedDate={(date) => setSelectedDate(toCalendarDate(date))}
-        minDate={minDate}
-      />
-      <main className="lg:pl-[var(--aside-width)]">
-        <Header />
-        <div className="container lg:max-w-3xl py-12">
-          <div className="flex flex-col gap-8">
-            <h3 className="font-bold tracking-tight text-gray-900 text-2xl">
-              Toodoos {filteredTodos.length > 0 ? `(${filteredTodos.length})` : ''} 📝
-            </h3>
-            <TodoForm
-              onSubmit={handleSubmit}
-              selectedProject={
-                selectedProject && selectedProject !== "all"
-                  ? selectedProject
-                  : undefined
-              }
-            />
-            <TodoList
-              todos={filteredTodos}
-              selectedDate={selectedDate}
-              onToggle={toggleTodo}
-              onDelete={handleDeleteTodo}
-              onEdit={handleEditTodo}
-            />
+    <NotificationProvider>
+      <div className="min-h-dvh [--aside-width:280px]">
+        <Sidebar
+          selectedDate={selectedDate}
+          setSelectedDate={(date) => setSelectedDate(toCalendarDate(date))}
+          minDate={minDate}
+        />
+        <main className="lg:pl-[var(--aside-width)]">
+          <Header />
+          <div className="container lg:max-w-3xl py-12">
+            <div className="flex flex-col gap-8">
+              <h3 className="font-bold tracking-tight text-gray-900 text-2xl">
+                Toodoos {filteredTodos.length > 0 ? `(${filteredTodos.length})` : ''} 📝
+              </h3>
+              <TodoForm
+                onSubmit={handleSubmit}
+                selectedProject={
+                  selectedProject && selectedProject !== "all"
+                    ? selectedProject
+                    : undefined
+                }
+              />
+              <TodoList
+                todos={filteredTodos}
+                selectedDate={selectedDate}
+                onToggle={toggleTodo}
+                onDelete={handleDeleteTodo}
+                onEdit={handleEditTodo}
+              />
+            </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+        <NotificationContainer />
+        <NotificationPermissionButton />
+      </div>
+    </NotificationProvider>
   );
 }
 

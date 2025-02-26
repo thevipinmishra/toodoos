@@ -4,12 +4,14 @@ import { nanoid } from "nanoid";
 import { Todo, Priority } from "../types/todo";
 import { Project } from "../types/project";
 import { getCurrentDateTime } from "../utils/date";
+import { Reminder } from "../types/reminder";
 
 interface Store {
   name: string;
   projects: Project[];
   todos: Todo[];
   selectedProject: string | null;
+  reminders: Reminder[];
   setName: (name: string) => void;
   addProject: (title: string) => void;
   updateProject: (id: string, title: string) => void;
@@ -19,6 +21,9 @@ interface Store {
   deleteTodo: (id: string) => void;
   updateTodo: (id: string, title: string, priority: Priority) => void;
   setSelectedProject: (projectId: string | null) => void;
+  addReminder: (title: string, datetime: string) => void;
+  toggleReminder: (id: string) => void;
+  deleteReminder: (id: string) => void;
 }
 
 type StorePersist = (
@@ -33,6 +38,7 @@ export const useStore = create<Store>()(
       projects: [],
       todos: [],
       selectedProject: null,
+      reminders: [],
       setName: (name) => set({ name }),
       addProject: (title) =>
         set((state) => ({
@@ -101,6 +107,36 @@ export const useStore = create<Store>()(
           ),
         })),
       setSelectedProject: (projectId) => set({ selectedProject: projectId }),
+      addReminder: (title, datetime) =>
+        set((state) => ({
+          reminders: [
+            ...state.reminders,
+            {
+              id: nanoid(),
+              title,
+              datetime,
+              completed: false,
+              createdAt: getCurrentDateTime(),
+              updatedAt: getCurrentDateTime(),
+            },
+          ],
+        })),
+      toggleReminder: (id) =>
+        set((state) => ({
+          reminders: state.reminders.map((reminder) =>
+            reminder.id === id
+              ? {
+                  ...reminder,
+                  completed: !reminder.completed,
+                  updatedAt: getCurrentDateTime(),
+                }
+              : reminder
+          ),
+        })),
+      deleteReminder: (id) =>
+        set((state) => ({
+          reminders: state.reminders.filter((reminder) => reminder.id !== id),
+        })),
     }),
     {
       name: "todo-app-storage",

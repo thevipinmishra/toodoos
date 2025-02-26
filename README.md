@@ -48,3 +48,18 @@ export default tseslint.config({
   },
 })
 ```
+
+# Minimal Todo Application
+
+## Notifications
+
+The application includes a notification system for reminders:
+
+- Browser notifications will appear when a reminder is due (requires permission)
+- A sound will play when notifications are triggered
+- In-app toast notifications will display regardless of browser notification permission
+- You can mark reminders as complete directly from notifications
+
+### Setup
+
+Make sure the application has a sound file at `/public/notification-sound.mp3` for notification alerts.
