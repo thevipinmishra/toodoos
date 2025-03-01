@@ -5,4 +5,7 @@ export interface Reminder {
   completed: boolean;
   createdAt: string;
   updatedAt: string;
+  isRecurring: boolean;
+  recurringDays?: number[]; // 0-6 representing days of week (0 = Sunday)
+  recurringTime?: string; // HH:MM format
 }

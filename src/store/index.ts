@@ -21,7 +21,13 @@ interface Store {
   deleteTodo: (id: string) => void;
   updateTodo: (id: string, title: string, priority: Priority) => void;
   setSelectedProject: (projectId: string | null) => void;
-  addReminder: (title: string, datetime: string) => void;
+  addReminder: (
+    title: string, 
+    datetime: string, 
+    isRecurring?: boolean, 
+    recurringDays?: number[],
+    recurringTime?: string
+  ) => void;
   toggleReminder: (id: string) => void;
   deleteReminder: (id: string) => void;
 }
@@ -107,7 +113,7 @@ export const useStore = create<Store>()(
           ),
         })),
       setSelectedProject: (projectId) => set({ selectedProject: projectId }),
-      addReminder: (title, datetime) =>
+      addReminder: (title, datetime, isRecurring = false, recurringDays = [], recurringTime = "") =>
         set((state) => ({
           reminders: [
             ...state.reminders,
@@ -118,6 +124,9 @@ export const useStore = create<Store>()(
               completed: false,
               createdAt: getCurrentDateTime(),
               updatedAt: getCurrentDateTime(),
+              isRecurring,
+              recurringDays: isRecurring ? recurringDays : undefined,
+              recurringTime: isRecurring ? recurringTime : undefined,
             },
           ],
         })),
