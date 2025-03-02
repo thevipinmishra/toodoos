@@ -16,9 +16,10 @@ import {
   parseZonedDateTime,
   toCalendarDate,
   CalendarDate,
+  parseDate,
 } from "@internationalized/date";
 import { Priority } from "./types/todo";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelectedProject } from "./hooks/useMetaState";
 import { Header } from "./components/layout/Header";
 import { Sidebar } from "./components/layout/Sidebar";
@@ -26,14 +27,56 @@ import { NotificationProvider } from './context/NotificationContext';
 import { NotificationContainer } from './components/notifications/NotificationContainer';
 import { NotificationPermissionButton } from './components/notifications/NotificationPermissionButton';
 
+// Utility function to work with URL params
+const getDateFromUrl = (): CalendarDate | null => {
+  const params = new URLSearchParams(window.location.search);
+  const dateParam = params.get('date');
+  
+  if (dateParam) {
+    try {
+      return parseDate(dateParam);
+    } catch (e) {
+      console.error('Invalid date format in URL', e);
+      return null;
+    }
+  }
+  return null;
+};
+
+const updateUrlWithDate = (date: CalendarDate) => {
+  const todayDate = today(getLocalTimeZone());
+  const params = new URLSearchParams(window.location.search);
+  
+  if (isEqualDay(date, todayDate)) {
+    params.delete('date');
+  } else {
+    params.set('date', date.toString());
+  }
+  
+  const newUrl = 
+    window.location.pathname + 
+    (params.toString() ? `?${params.toString()}` : '') +
+    window.location.hash;
+  
+  window.history.replaceState({}, '', newUrl);
+};
+
 function App() {
   const todos = useTodos();
   const addTodo = useAddTodo();
   const toggleTodo = useToggleTodo();
   const deleteTodo = useDeleteTodo();
   const updateTodo = useUpdateTodo();
-  const [selectedDate, setSelectedDate] = useState(today(getLocalTimeZone()));
+  const [selectedDate, setSelectedDate] = useState<CalendarDate>(() => {
+    const urlDate = getDateFromUrl();
+    return urlDate || today(getLocalTimeZone());
+  });
   const { selectedProject } = useSelectedProject();
+
+  // Update URL when selected date changes
+  useEffect(() => {
+    updateUrlWithDate(selectedDate);
+  }, [selectedDate]);
 
   const minDate =
     todos.length > 0
@@ -70,12 +113,17 @@ function App() {
     updateTodo(id, title, priority);
   };
 
+  const handleDateChange = (date: DateValue) => {
+    const calendarDate = toCalendarDate(date);
+    setSelectedDate(calendarDate);
+  };
+
   return (
     <NotificationProvider>
       <div className="min-h-dvh [--aside-width:280px]">
         <Sidebar
           selectedDate={selectedDate}
-          setSelectedDate={(date) => setSelectedDate(toCalendarDate(date))}
+          setSelectedDate={handleDateChange}
           minDate={minDate}
         />
         <main className="lg:pl-[var(--aside-width)]">

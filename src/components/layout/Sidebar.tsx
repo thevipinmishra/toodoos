@@ -25,6 +25,8 @@ import {
   ModalOverlay,
   Separator,
   TextField,
+  Tooltip,
+  TooltipTrigger,
 } from "react-aria-components";
 import { useProjects, useProjectActions } from "../../hooks/useProjects";
 import { useState } from "react";
@@ -91,6 +93,7 @@ export const Sidebar = ({
         aria-label="Filter using date"
         className="p-4"
         maxValue={today(getLocalTimeZone())}
+        
         minValue={minDate}
         value={selectedDate}
         onChange={setSelectedDate}
@@ -120,8 +123,10 @@ export const Sidebar = ({
       <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-gray-900">Projects</h2>
-          <button
-            onClick={() => {
+       
+            <TooltipTrigger delay={700} closeDelay={40}>
+            <Button
+            onPress={() => {
               setEditingProject(null);
               setNewProjectName("");
               setProjectDialogOpen(true);
@@ -129,7 +134,12 @@ export const Sidebar = ({
             className="size-6 flex items-center justify-center rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors outline-none ring-gray-200 focus-visible:ring-1"
           >
             <Plus size={16} />
-          </button>
+          </Button>
+            <Tooltip className="p-2 bg-gray-800 text-white text-xs rounded-md shadow-sm data-entering:motion-preset-fade">
+                Add Project
+            </Tooltip>
+            </TooltipTrigger>
+        
         </div>
         <div className="space-y-1">
           <div
